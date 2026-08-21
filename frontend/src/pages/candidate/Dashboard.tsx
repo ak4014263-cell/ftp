@@ -298,7 +298,7 @@ export default function Dashboard() {
       toast.loading('🔄 Firefox automation running… watching progress below.', { id: 'sync-prof' })
 
       // Poll /live-status until automation finishes
-      const WTTJ_SVC = 'http://localhost:8012'
+      const WTTJ_SVC = `${API_BASE}/wttj`
       let done = false
       for (let i = 0; i < 120 && !done; i++) {  // max 4 minutes
         await new Promise(r => setTimeout(r, 2000))
@@ -364,7 +364,7 @@ export default function Dashboard() {
         toast.loading('🔄 Firefox automation running… watching progress below.', { id: 'wttj-create' })
         
         let done = false
-        const WTTJ_SVC = 'http://localhost:8012' // Live status polling bypasses API gateway for immediate feedback
+        const WTTJ_SVC = `${API_BASE}/wttj`
         for (let i = 0; i < 120 && !done; i++) {
           await new Promise(r => setTimeout(r, 2000))
           try {
