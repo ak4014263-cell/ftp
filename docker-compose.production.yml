@@ -28,6 +28,11 @@ services:
       - swiply-network
     restart: always
     command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   gateway:
     build:
