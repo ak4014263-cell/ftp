@@ -856,6 +856,20 @@ async def _run_firefox_signup_and_onboard(
             ], password, "Password")
             await asyncio.sleep(0.8)
 
+            # Check any terms checkboxes if they exist (especially for signup)
+            try:
+                for checkbox_sel in ["input[type='checkbox']", "[role='checkbox']"]:
+                    checkboxes = await page.locator(checkbox_sel).all()
+                    for cb in checkboxes:
+                        if await cb.is_visible(timeout=500):
+                            is_checked = await cb.is_checked()
+                            if not is_checked:
+                                await cb.click(force=True)
+                                await asyncio.sleep(0.2)
+                                logger.info("✅ Clicked checkbox (terms/newsletter)")
+            except Exception as e:
+                pass
+
             await dismiss_cookies()
             await update_live_state(
                 step_name="Submitting Authentication",
@@ -871,11 +885,13 @@ async def _run_firefox_signup_and_onboard(
             btn_selectors = [
                 "button[data-testid='login-button-submit']",
                 "button[data-testid='sign-up-form-submit-button']",
-                "button[type='submit']",
+                "button:has-text('Sign in')",
+                "button:has-text('Log in')",
                 "button:has-text('Sign up')",
                 "button:has-text('Create account')",
-                "button:has-text('Sign in')",
-                "button:has-text('Log in')"
+                "button:has-text('Agree and create account')",
+                "button:has-text('Continue')",
+                "button[type='submit']"
             ]
             
             for btn_sel in btn_selectors:
@@ -897,6 +913,14 @@ async def _run_firefox_signup_and_onboard(
                 try:
                     await page.keyboard.press("Enter")
                 except Exception:
+                    pass
+            else:
+                # Even if we clicked, sometimes React forms ignore clicks if not focused. 
+                # Press enter as a fallback.
+                try:
+                    await asyncio.sleep(0.5)
+                    await page.keyboard.press("Enter")
+                except:
                     pass
 
             # Wait for navigation / redirect
