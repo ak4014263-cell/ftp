@@ -4,6 +4,7 @@ NO AI - Uses direct field mapping with saved credentials
 """
 import logging
 import asyncio
+import os
 from typing import Dict, Any, Optional
 from datetime import datetime
 
@@ -148,7 +149,7 @@ class SwipeAutomationHandler:
                 password=password,
                 job_url=job_url,
                 profile_data=profile_data,
-                headless=False  # Visible browser so user can see the magic!
+                headless=os.getenv("HEADLESS", "true").lower() == "true"
             )
             
             # 7. Update application status based on result
