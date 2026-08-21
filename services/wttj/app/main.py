@@ -913,7 +913,7 @@ async def _run_firefox_signup_and_onboard(
                 # If still on signup, check for 'already registered' errors
                 if not existing_account and "signup" in page.url:
                     error_text = ""
-                    for err_sel in [".error-message", "[data-testid='error-message']", "div[role='alert']"]:
+                    for err_sel in [".error-message", "[data-testid='error-message']", "div[role='alert']", "p[role='alert']", "span[role='alert']"]:
                         try:
                             el = page.locator(err_sel).first
                             if await el.is_visible(timeout=500):
@@ -922,7 +922,7 @@ async def _run_firefox_signup_and_onboard(
                             pass
                     
                     error_lower = error_text.lower()
-                    if "already in use" in error_lower or "email is already" in error_lower or "already taken" in error_lower or "registered" in error_lower:
+                    if "already" in error_lower or "in use" in error_lower or "taken" in error_lower or "registered" in error_lower:
                         await update_live_state(
                             step_name="Error: Account Exists",
                             step_index=3,
@@ -937,6 +937,22 @@ async def _run_firefox_signup_and_onboard(
                         result["error"] = "This email is already registered on WTTJ. Please select 'I Have an Account' and sign in instead."
                         await browser.close()
                         return result
+                    elif _ == 14: # Last iteration
+                        # If we're still on signup and haven't redirected, signup failed for some unknown reason (e.g., CAPTCHA)
+                        await update_live_state(
+                            step_name="Error: Signup Failed",
+                            step_index=3,
+                            progress=45,
+                            url=page.url,
+                            log_msg=f"Signup failed. Stayed on signup page. Error: {error_text}",
+                            page=page,
+                            is_running=False
+                        )
+                        result["success"] = False
+                        result["status"] = "auth_failed"
+                        result["error"] = f"Could not complete sign up. WTTJ did not accept the registration. {error_text}"
+                        await browser.close()
+                        return result
 
             result["success"] = registered or ("onboarding" in page.url or "me" in page.url or "dashboard" in page.url)
             result["status"] = "authenticated" if result["success"] else "auth_incomplete"
@@ -945,6 +961,17 @@ async def _run_firefox_signup_and_onboard(
             if not existing_account and not result["success"]:
                  result["error"] = "Could not complete sign up. If you already have an account, please try signing in."
                  result["status"] = "auth_failed"
+                 await update_live_state(
+                     step_name="Error: Signup Failed",
+                     step_index=3,
+                     progress=45,
+                     url=page.url,
+                     log_msg="Signup failed.",
+                     page=page,
+                     is_running=False
+                 )
+                 await browser.close()
+                 return result
                  
             logger.info(f"WTTJ auth result: {result['status']} | URL={page.url}")
             
@@ -1147,9 +1174,14 @@ async def _run_firefox_signup_and_onboard(
                                     progress=75,
                                     url=page.url,
                                     log_msg=f"Found {len(visible_errors)} validation errors! Stopping script to prevent getting stuck.",
-                                    page=page
+                                    page=page,
+                                    is_running=False
                                 )
-                                raise Exception(f"Validation errors on form: {', '.join(visible_errors)}")
+                                result["success"] = False
+                                result["status"] = "validation_error"
+                                result["error"] = f"Validation errors on form: {visible_errors}"
+                                await browser.close()
+                                return result
                             
                             break
                     except Exception as e:
