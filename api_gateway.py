@@ -201,6 +201,20 @@ async def user_routes(path: str, request: Request):
     return await proxy_request("user", path, request)
 
 # Job Service Routes
+@app.get("/recommendations")
+async def get_recommendations(candidate_id: str = "demo-candidate"):
+    """Get job recommendations - proxied to job service"""
+    try:
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            response = await client.get(f"{SERVICES['job']}/recommendations", params={"candidate_id": candidate_id})
+            return JSONResponse(
+                content=response.json() if response.headers.get('content-type', '').startswith('application/json') else response.text,
+                status_code=response.status_code
+            )
+    except Exception as e:
+        logger.error(f"Error fetching recommendations: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.get("/jobs")
 async def get_jobs_list():
     """Get jobs list - direct endpoint"""
