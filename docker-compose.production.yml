@@ -53,6 +53,7 @@ services:
       - AI_SERVICE_URL=http://ai:8010
       - WTTJ_SERVICE_URL=http://wttj:8012
       - WTTJ_SCRAPER_SERVICE_URL=http://wttj_scraper:8013
+      - GMAIL_SERVICE_URL=http://gmail:8008
     expose:
       - "8000"
     depends_on:
@@ -75,6 +76,7 @@ services:
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER:-swiply}:${POSTGRES_PASSWORD:-swiply123}@postgres:5432/${POSTGRES_DB:-swiply}
       - REDIS_URL=redis://redis:6379/0
+      - AI_SERVICE_URL=http://ai:8010
     expose:
       - "8001"
     depends_on:
@@ -156,6 +158,25 @@ services:
       - DATABASE_URL=postgresql://${POSTGRES_USER:-swiply}:${POSTGRES_PASSWORD:-swiply123}@postgres:5432/${POSTGRES_DB:-swiply}
     expose:
       - "8007"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - swiply-network
+    restart: always
+
+  gmail:
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args:
+        SERVICE_NAME: gmail
+        PORT: 8008
+    container_name: swiply-gmail
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-swiply}:${POSTGRES_PASSWORD:-swiply123}@postgres:5432/${POSTGRES_DB:-swiply}
+    expose:
+      - "8008"
     depends_on:
       postgres:
         condition: service_healthy
