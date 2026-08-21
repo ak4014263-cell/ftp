@@ -9,7 +9,7 @@ import {
 } from 'lucide-react'
 
 const API_BASE = ((import.meta as any).env?.VITE_API_URL) || 'http://localhost:8000'
-const WTTJ_SERVICE = 'http://localhost:8012'
+const WTTJ_SERVICE = `${API_BASE}/wttj`
 
 interface SetupStatus {
   wttjAccountCreated: boolean
