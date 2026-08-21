@@ -1,0 +1,41 @@
+# Environments
+.env
+.env.production
+.venv/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Assets / Data
+screenshots/
+screenshots_debug/
+test_screenshots/
+browser_sessions/
+uploads/
+resumes/
+swiply.db
+scratch/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+gmail_tokens/
+*client_secret*.json
