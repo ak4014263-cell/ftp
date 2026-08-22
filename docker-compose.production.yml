@@ -357,8 +357,6 @@ services:
     networks:
       - swiply-network
     restart: always
-    depends_on:
-      - nginx
 
   # Nginx reverse proxy with HTTPS
   nginx:
@@ -375,7 +373,6 @@ services:
     depends_on:
       - gateway
       - frontend
-      - certbot
     networks:
       - swiply-network
     restart: always
