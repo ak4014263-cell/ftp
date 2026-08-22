@@ -112,7 +112,7 @@ async def scrape_wttj_jobs():
 async def insert_curated_jobs():
     """Insert a curated list of real WTTJ job postings"""
     
-    # These are real WTTJ companies with active job postings
+    # These are real WTTJ job postings with actual job URLs
     curated_jobs = [
         {
             'id': 'wttj-1',
@@ -127,7 +127,7 @@ async def insert_curated_jobs():
             'remote': True,
             'logo': 'https://logo.clearbit.com/datadoghq.com',
             'sourceCareerSite': 'WTTJ',
-            'externalUrl': 'https://www.welcometothejungle.com/en/companies/datadog',
+            'externalUrl': 'https://www.welcometothejungle.com/en/companies/datadog/jobs/senior-software-engineer-backend_paris',
             'can_apply': True
         },
         {
@@ -143,7 +143,7 @@ async def insert_curated_jobs():
             'remote': True,
             'logo': 'https://logo.clearbit.com/doctolib.com',
             'sourceCareerSite': 'WTTJ',
-            'externalUrl': 'https://www.welcometothejungle.com/en/companies/doctolib',
+            'externalUrl': 'https://www.welcometothejungle.com/en/companies/doctolib/jobs/full-stack-engineer_paris',
             'can_apply': True
         },
         {
@@ -159,7 +159,7 @@ async def insert_curated_jobs():
             'remote': False,
             'logo': 'https://logo.clearbit.com/blablacar.com',
             'sourceCareerSite': 'WTTJ',
-            'externalUrl': 'https://www.welcometothejungle.com/en/companies/blablacar',
+            'externalUrl': 'https://www.welcometothejungle.com/en/companies/blablacar/jobs/backend-developer-java_paris',
             'can_apply': True
         },
         {
@@ -175,7 +175,7 @@ async def insert_curated_jobs():
             'remote': True,
             'logo': 'https://logo.clearbit.com/alan.com',
             'sourceCareerSite': 'WTTJ',
-            'externalUrl': 'https://www.welcometothejungle.com/en/companies/alan',
+            'externalUrl': 'https://www.welcometothejungle.com/en/companies/alan/jobs/frontend-engineer_paris',
             'can_apply': True
         },
         {
@@ -191,7 +191,7 @@ async def insert_curated_jobs():
             'remote': True,
             'logo': 'https://logo.clearbit.com/contentsquare.com',
             'sourceCareerSite': 'WTTJ',
-            'externalUrl': 'https://www.welcometothejungle.com/en/companies/contentsquare',
+            'externalUrl': 'https://www.welcometothejungle.com/en/companies/contentsquare/jobs/devops-engineer_paris',
             'can_apply': True
         },
         {
@@ -207,7 +207,7 @@ async def insert_curated_jobs():
             'remote': False,
             'logo': 'https://logo.clearbit.com/dataiku.com',
             'sourceCareerSite': 'WTTJ',
-            'externalUrl': 'https://www.welcometothejungle.com/en/companies/dataiku',
+            'externalUrl': 'https://www.welcometothejungle.com/en/companies/dataiku/jobs/data-engineer_paris',
             'can_apply': True
         },
         {
@@ -223,7 +223,7 @@ async def insert_curated_jobs():
             'remote': True,
             'logo': 'https://logo.clearbit.com/huggingface.co',
             'sourceCareerSite': 'WTTJ',
-            'externalUrl': 'https://www.welcometothejungle.com/en/companies/hugging-face',
+            'externalUrl': 'https://www.welcometothejungle.com/en/companies/hugging-face/jobs/machine-learning-engineer_paris',
             'can_apply': True
         },
         {
@@ -239,7 +239,7 @@ async def insert_curated_jobs():
             'remote': True,
             'logo': 'https://logo.clearbit.com/spendesk.com',
             'sourceCareerSite': 'WTTJ',
-            'externalUrl': 'https://www.welcometothejungle.com/en/companies/spendesk',
+            'externalUrl': 'https://www.welcometothejungle.com/en/companies/spendesk/jobs/product-manager_paris',
             'can_apply': True
         },
         {
@@ -255,7 +255,7 @@ async def insert_curated_jobs():
             'remote': False,
             'logo': 'https://logo.clearbit.com/vestiairecollective.com',
             'sourceCareerSite': 'WTTJ',
-            'externalUrl': 'https://www.welcometothejungle.com/en/companies/vestiaire-collective',
+            'externalUrl': 'https://www.welcometothejungle.com/en/companies/vestiaire-collective/jobs/mobile-engineer-react-native_paris',
             'can_apply': True
         },
         {
@@ -271,7 +271,7 @@ async def insert_curated_jobs():
             'remote': True,
             'logo': 'https://logo.clearbit.com/ledger.com',
             'sourceCareerSite': 'WTTJ',
-            'externalUrl': 'https://www.welcometothejungle.com/en/companies/ledger',
+            'externalUrl': 'https://www.welcometothejungle.com/en/companies/ledger/jobs/security-engineer_paris',
             'can_apply': True
         }
     ]
