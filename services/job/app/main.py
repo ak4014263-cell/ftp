@@ -139,10 +139,6 @@ async def trigger_job_automation(candidate_id: str, job: DBJob, db: Session):
             "error": f"Automation error: {str(e)}"
         }
 
-@app.get("/")
-async def root():
-    return {"service": "job", "status": "running"}
-
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
