@@ -6,7 +6,6 @@ import toast from 'react-hot-toast'
 import axios from 'axios'
 
 const API_BASE = ((import.meta as any).env?.VITE_API_URL) || 'http://localhost:8000'
-const WTTJ_SERVICE_URL = 'http://localhost:8012'
 
 export default function JobSwipe() {
   const [jobs, setJobs] = useState<any[]>([])
@@ -42,7 +41,7 @@ export default function JobSwipe() {
     if (isApplying) {
       pollIntervalRef.current = setInterval(async () => {
         try {
-          const res = await axios.get(`${WTTJ_SERVICE_URL}/live-status`)
+          const res = await axios.get(`${API_BASE}/wttj/live-status`)
           setLiveStatus(res.data)
           if (!res.data.is_running && res.data.progress === 100) {
             setTimeout(() => {

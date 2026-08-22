@@ -66,8 +66,10 @@ SERVICES = {
     "gmail": os.getenv("GMAIL_SERVICE_URL", "http://localhost:8008"),
     "credential": os.getenv("CREDENTIAL_SERVICE_URL", "http://localhost:8009"),
     "ai": os.getenv("AI_SERVICE_URL", "http://localhost:8010"),
+    "payment": os.getenv("PAYMENT_SERVICE_URL", "http://localhost:8011"),
     "wttj": os.getenv("WTTJ_SERVICE_URL", "http://localhost:8012"),
     "wttj_scraper": os.getenv("WTTJ_SCRAPER_SERVICE_URL", "http://localhost:8013"),
+    "admin": os.getenv("ADMIN_SERVICE_URL", "http://localhost:8014"),
 }
 
 @app.get("/")
@@ -1244,6 +1246,18 @@ async def swipe_job_endpoint(request: Request):
 @app.api_route("/ai/{path:path}", methods=["GET", "POST", "PUT", "PATCH", "DELETE"])
 async def ai_routes(path: str, request: Request):
     return await proxy_request("ai", path, request)
+
+# Payment Service Routes
+@app.api_route("/payment/{path:path}", methods=["GET", "POST", "PUT", "PATCH", "DELETE"])
+async def payment_routes(path: str, request: Request):
+    """Route payment/subscription requests to payment service"""
+    return await proxy_request("payment", path, request)
+
+# Admin Service Routes
+@app.api_route("/admin/{path:path}", methods=["GET", "POST", "PUT", "PATCH", "DELETE"])
+async def admin_routes(path: str, request: Request):
+    """Route admin requests to admin service"""
+    return await proxy_request("admin", path, request)
 
 # WTTJ Service Routes
 @app.api_route("/wttj/{path:path}", methods=["GET", "POST", "PUT", "PATCH", "DELETE"])

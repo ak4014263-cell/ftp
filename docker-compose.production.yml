@@ -51,6 +51,8 @@ services:
       - EMAIL_SERVICE_URL=http://email:8007
       - CREDENTIAL_SERVICE_URL=http://credential:8009
       - AI_SERVICE_URL=http://ai:8010
+      - PAYMENT_SERVICE_URL=http://payment:8011
+      - ADMIN_SERVICE_URL=http://admin:8014
       - WTTJ_SERVICE_URL=http://wttj:8012
       - WTTJ_SCRAPER_SERVICE_URL=http://wttj_scraper:8013
       - GMAIL_SERVICE_URL=http://gmail:8008
@@ -219,6 +221,51 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     expose:
       - "8010"
+    networks:
+      - swiply-network
+    restart: always
+
+  payment:
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args:
+        SERVICE_NAME: payment
+        PORT: 8011
+    container_name: swiply-payment
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-swiply}:${POSTGRES_PASSWORD:-swiply123}@postgres:5432/${POSTGRES_DB:-swiply}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET:-}
+      - STRIPE_PRICE_ID=${STRIPE_PRICE_ID}
+      - FRONTEND_URL=${FRONTEND_URL:-http://www.swiply.io}
+    expose:
+      - "8011"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - swiply-network
+    restart: always
+
+  admin:
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args:
+        SERVICE_NAME: admin
+        PORT: 8014
+    container_name: swiply-admin
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-swiply}:${POSTGRES_PASSWORD:-swiply123}@postgres:5432/${POSTGRES_DB:-swiply}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key-change-in-production}
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin@swiply.io}
+    expose:
+      - "8014"
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - swiply-network
     restart: always
