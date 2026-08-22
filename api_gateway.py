@@ -215,23 +215,29 @@ async def get_recommendations(candidate_id: str = "demo-candidate"):
         logger.error(f"Error fetching recommendations: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.api_route("/jobs/{job_id}", methods=["GET", "PUT", "PATCH", "DELETE"])
+async def job_by_id_routes(job_id: str, request: Request):
+    """Route requests to specific job by ID"""
+    return await proxy_request("job", job_id, request)
+
 @app.get("/jobs")
-async def get_jobs_list():
-    """Get jobs list - direct endpoint"""
+async def get_jobs_list(request: Request):
+    """Get jobs list - proxies query params to job service root"""
+    logger.info(f"📋 GET /jobs endpoint hit - fetching from {SERVICES['job']}/")
     try:
         async with httpx.AsyncClient(timeout=30.0) as client:
-            response = await client.get(f"{SERVICES['job']}/jobs")
+            response = await client.get(
+                f"{SERVICES['job']}/",
+                params=dict(request.query_params)
+            )
+            logger.info(f"✅ Job service response: {response.status_code}")
             return JSONResponse(
                 content=response.json() if response.headers.get('content-type', '').startswith('application/json') else response.text,
                 status_code=response.status_code
             )
     except Exception as e:
-        logger.error(f"Error fetching jobs: {e}")
+        logger.error(f"❌ Error fetching jobs: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-
-@app.api_route("/jobs/{path:path}", methods=["GET", "POST", "PUT", "PATCH", "DELETE"])
-async def job_routes(path: str, request: Request):
-    return await proxy_request("job", path, request)
 
 # Profile Service Routes
 @app.api_route("/profiles/{path:path}", methods=["GET", "POST", "PUT", "PATCH", "DELETE"])
