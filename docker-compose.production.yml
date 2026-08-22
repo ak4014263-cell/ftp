@@ -345,7 +345,7 @@ services:
       - swiply-network
     restart: always
 
-  # Nginx reverse proxy
+  # Nginx reverse proxy with HTTPS
   nginx:
     image: nginx:alpine
     container_name: swiply-nginx
@@ -355,12 +355,19 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./ssl:/etc/nginx/ssl:ro
+      - ./certbot:/var/www/certbot:ro
     depends_on:
       - gateway
       - frontend
     networks:
       - swiply-network
     restart: always
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
 volumes:
   postgres_data:
